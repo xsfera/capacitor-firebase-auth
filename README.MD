@@ -9,6 +9,9 @@ The plugin supports Google, Twitter, Facebook and Phone providers in Android and
 
 ## What news
 
+Ability to disable authorization via social networks and their libraries, saving 4Mb in the app on iOS
+to do this, replace in the podfile pod 'CapacitorFirebaseAuth' with pod 'CapacitorFirebaseAuth/OnlyPhone'
+
 Issue 38#: interoperability with [Stencil](https://stenciljs.com), thanks to [Justin Rich](https://github.com/socalrunner).
 
 ## Important notes for upgrading between minor or major versions.

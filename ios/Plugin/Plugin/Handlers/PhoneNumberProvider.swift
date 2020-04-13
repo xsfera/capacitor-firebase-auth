@@ -2,7 +2,7 @@ import Foundation
 import Capacitor
 import FirebaseAuth
 
-class PhoneNumberProviderHandler: NSObject, ProviderHandler {
+class PhoneProviderHandler: NSObject, ProviderHandler {
 
 
     var plugin: CapacitorFirebaseAuth? = nil

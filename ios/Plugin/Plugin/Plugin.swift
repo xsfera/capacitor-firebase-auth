@@ -2,7 +2,6 @@ import Foundation
 import Capacitor
 import FirebaseCore
 import FirebaseAuth
-import GoogleSignIn
 
 typealias JSObject = [String:Any]
 typealias JSArray = [JSObject]
@@ -33,18 +32,13 @@ public class CapacitorFirebaseAuth: CAPPlugin {
         }
         
         for provider in self.providersNames {
-            if ("google.com" == provider) {
-                self.providers["google.com"] = GoogleProviderHandler()
-                self.providers["google.com"]?.initialize(plugin: self)
-            } else if ("twitter.com" == provider) {
-                self.providers["twitter.com"] = TwitterProviderHandler()
-                self.providers["twitter.com"]?.initialize(plugin: self)
-            } else if ("facebook.com" == provider) {
-                self.providers["facebook.com"] = FacebookProviderHandler()
-                self.providers["facebook.com"]?.initialize(plugin: self)
-            } else if ("phone" == provider) {
-                self.providers["phone"] = PhoneNumberProviderHandler()
-                self.providers["phone"]?.initialize(plugin: self)
+            var providerClassName = provider as String;
+            providerClassName = String(providerClassName[..<(providerClassName.lastIndex(of: ".")  ?? providerClassName.endIndex)])
+            providerClassName = String(providerClassName[providerClassName.startIndex]).uppercased() + String(providerClassName[providerClassName.index(providerClassName.startIndex, offsetBy: 1)...])
+                        
+            if let providerType: NSObject.Type = NSClassFromString("CapacitorFirebaseAuth.\(providerClassName)ProviderHandler") as? NSObject.Type{
+                self.providers[provider] = providerType.init() as! ProviderHandler
+                self.providers[provider]?.initialize(plugin: self)
             }
         }
     }
@@ -175,7 +169,7 @@ public class CapacitorFirebaseAuth: CAPPlugin {
             call.success()
         } catch let signOutError as NSError {
             print ("Error signing out: %@", signOutError)
-            call.reject("Error signing out: %@", signOutError)
+            call.reject("Error signing out: \(signOutError)")
         }
     }
 }
